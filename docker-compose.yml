@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  poll-app-api:
+    container_name: poll-app-api
+    build:
+      dockerfile: ./packages/api-gateway/Dockerfile
+      context: .
+    ports:
+      - 5002:3002
+    environment:
+      PORT: 3002
+      MONGO_HOST: poll-app-mongo
+      MONGO_PORT: 27017
+      MONGO_DATABASE: mongoose
+    depends_on:
+      - poll-app-mongo
+    networks:
+      - poll-app-network
+  poll-app-webapp:
+    container_name: poll-app-webapp
+    build:
+      dockerfile: ./packages/webapp/Dockerfile
+      context: .
+    ports:
+      - 5000:3000
+    networks:
+      - poll-app-network
+  poll-app-nginx:
+    container_name: poll-app-nginx
+    build: nginx
+    ports:
+      - 9000:9000
+    depends_on:
+      - poll-app-webapp
+      - poll-app-api
+    networks:
+      - poll-app-network
+  poll-app-mongo:
+    image: mvertes/alpine-mongo
+    container_name: poll-app-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ${DATA_PATH}/mongo-data:/data/db
+    networks:
+      - poll-app-network
+networks:
+  poll-app-network:
+    name: poll-app-network

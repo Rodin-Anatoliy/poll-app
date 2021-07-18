@@ -1,0 +1,29 @@
+{
+  "name": "webapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "workspaces": {
+    "nohoist": [
+      "antd"
+    ]
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "antd": "^4.15.4",
+    "bootstrap": "^5.0.0",
+    "classnames": "^2.3.1",
+    "next": "10.2.0",
+    "react": "17.0.2",
+    "react-bootstrap": "^1.6.1",
+    "react-dom": "17.0.2",
+    "react-query": "^3.15.2"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.4"
+  }
+}

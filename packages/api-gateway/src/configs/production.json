@@ -1,0 +1,9 @@
+{
+    "env": "production",
+    "dbConfig": {
+        "host": "poll-app-mongo",
+        "database": "mongoose",
+        "port": 27017
+    },
+    "secretKey": "secretKey"
+}

@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  mongo:
+    image: mvertes/alpine-mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ${DATA_PATH}/mongo-data:/data/db
+    networks:
+      - poll-app-network
+networks:
+  poll-app-network:
+    name: poll-app-network
