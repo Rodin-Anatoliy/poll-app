@@ -285,7 +285,7 @@ export class Api<
      */
     getPoll: (
       query?: {
-        searchId: string;
+        pollId: string;
       },
       params: RequestParams = {},
     ) =>

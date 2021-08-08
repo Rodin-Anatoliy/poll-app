@@ -6,10 +6,10 @@ import validationMiddleware from '@middlewares/validation.middleware';
 class PollRout implements Route {
   public path = '/poll';
   public router = Router();
-    private pollController = new PollController();
-    
+  private pollController = new PollController();
+
   constructor() {
-      this.initializeRoutes();
+    this.initializeRoutes();
   }
 
   private initializeRoutes() {

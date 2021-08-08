@@ -4,3 +4,133 @@
 .content {
   min-height: calc(100vh - 64px - 70px);
 }
+
+.customNavbar {
+  padding: 20px;
+}
+
+.pageImage {
+  object-fit: cover;
+  width: 100%;
+  background-position: center;
+}
+
+.pageImageContainer {
+  position: relative;
+  height: 95px;
+  line-height: 95px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.pageTask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.pageTaskTitle {
+  background-color: rgba(0,0,0,0.2);
+  color: #fff;
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 39px;
+  width: fit-content;
+  padding: 5px 30px;
+}
+
+.pageContent {
+  padding: 40px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #5e5e5e;
+}
+
+.pageContentPadding {
+  padding: 20px 40px;
+}
+
+.poll {
+  margin: 40px auto;
+  max-width: 505px;
+}
+
+.pollTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.inputText {
+  width: 100%;
+  border: 2px solid #e2e2e2;
+  outline: none;
+  padding: 10px;
+  padding-left: 15px;
+  font-family: inherit;
+  font-weight: 300;
+}
+
+.pollTablePlus {
+  padding: 8px 20px;
+  border-bottom: 1px #eee solid;
+  font-size: 14px;
+}
+
+.btn {
+  display: inline-block;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: 300;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+  transition: all .5s ease;
+  padding: .6rem 2.5rem;
+  line-height: 1.25;
+  text-align: center;
+  background: #f89b1c;
+  border: 0;
+}
+
+.btnPlus {
+  font-size: 20px;
+  padding: 0 10px;
+}
+
+.btnStart {
+  font-size: 20px;
+  margin: 20px 0 0;
+}
+
+.pollTableCell {
+  display: flex;
+  flex-direction: row;
+}
+
+.pollTableCellHead {
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 30%;
+  align-content: center;
+}
+
+.pollTableCellHead p {
+  margin: 0;
+}
+
+
+.pollTableCellGray  {
+  border-bottom: 1px #ccc solid;
+  background-color: #eee;
+}
+
+.pollTableCellBody {
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 70%;
+}
