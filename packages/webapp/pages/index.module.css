@@ -95,6 +95,14 @@
   border: 0;
 }
 
+.btn:hover {
+  background: #F9AF49;
+}
+
+.btn:active {
+  background: #9E6312;
+}
+
 .btnPlus {
   font-size: 20px;
   padding: 0 10px;
@@ -103,6 +111,9 @@
 .btnStart {
   font-size: 20px;
   margin: 20px 0 0;
+}
+.btnStart:disabled {
+  opacity: 0.7;
 }
 
 .pollTableCell {

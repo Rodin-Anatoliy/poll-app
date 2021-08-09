@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { PollController } from '@controllers/poll.controller';
 import Route from '@interfaces/routes.interface';
 import validationMiddleware from '@middlewares/validation.middleware';
-
+import { IPoll, IAnswer } from '@/interfaces/poll.interface';
+import { PollReqDto, GetPollReqDto, AnswerReqDto } from '@dtos/poll-req.dto';
 class PollRout implements Route {
   public path = '/poll';
   public router = Router();
@@ -18,13 +19,21 @@ class PollRout implements Route {
       (req, res, next) => {
         next();
       },
-      validationMiddleware('', 'body'), // validate request
+      validationMiddleware(PollReqDto, 'body'),
       this.pollController.createPoll,
     );
     this.router.get(
       `${this.path}/get`,
-      validationMiddleware('', 'query'), // validate request
+      validationMiddleware(GetPollReqDto, 'query'),
       this.pollController.getPoll,
+    );
+    this.router.post(
+      `${this.path}/update`,
+      (req, res, next) => {
+        console.log(req);
+      },
+      validationMiddleware(AnswerReqDto, 'body'),
+      this.pollController.updatePoll,
     );
   }
 }

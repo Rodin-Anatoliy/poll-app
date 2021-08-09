@@ -9,7 +9,7 @@
     ],
     "baseUrl": "../..",
     "paths": {
-      "@blookery/*": [
+      "@poll-app/*": [
         "packages/*/src"
       ]
     },

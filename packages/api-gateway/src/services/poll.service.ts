@@ -1,6 +1,28 @@
+import pollModel from '../models/poll.model';
+import { IPoll } from '../interfaces/poll.interface';
 
 export class PollService {
-  public async persist() {}
-  public async get() {}
-  public async findAndUpdate() {}
+  public pollModel = pollModel;
+  public async persist(poll: IPoll) {
+    return await pollModel.create(poll);
+  }
+
+  public async findById(id: string) {
+    return await this.pollModel.findById(id);
+  }
+
+  public async findAndUpdate({
+    pollId,
+    userName,
+    selectedOption,
+  }: {
+    pollId: string;
+    userName: string;
+    selectedOption: number;
+  }) {
+    const poll = await this.findById(pollId);
+    return await this.pollModel.findByIdAndUpdate(pollId, {
+      answers: [...poll.answers, { userName, selectedOption }],
+    });
+  }
 }

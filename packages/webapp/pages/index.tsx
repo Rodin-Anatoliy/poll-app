@@ -11,9 +11,16 @@ import {
 import { dehydrate } from 'react-query/hydration';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { Api } from '../Api';
-import { Button } from 'antd';
+import { Api, IAnswer, IPoll } from '../Api';
+import { Modal, Button } from 'react-bootstrap';
 
+interface Props {
+  handleClose: () => void;
+  onYesClick: () => void;
+  show: boolean;
+  bodyContent: string;
+  title: string;
+}
 
 export default function Index() {
   const api = useApi();
@@ -26,56 +33,66 @@ export default function Index() {
     pollId,
   ]);
   const prefetchedData = prefetchedState && prefetchedState.data;
+  const [modalShow, setModalShow] = useState<boolean>(false);
   const [data, setData] = useState<any>(prefetchedData ? prefetchedData : null);
-  interface Question {
-    questionText: string;
-    answers: string[];
-  }
-  const [question, setQuestion] = useState<Question>({
-    questionText: '',
-    answers: [],
+  const [poll, setPoll] = useState<IPoll>({
+    question: data?.question ? data?.question : '',
+    answerOptions: data?.answerOptions ? data?.answerOptions : [],
+    answers: data?.answers ? data?.answers : [],
   });
-
   const handlePressPlus = () => {
-    const changes = { ...question };
-    changes.answers.push('');
-    setQuestion(changes);
+    const changes = { ...poll };
+    changes.answerOptions.push('');
+    setPoll(changes);
   };
 
   const handleChangeInput = ({
     event,
     index,
   }: {
-      event: React.ChangeEvent<HTMLInputElement>;
-      index?: number;
-    }) => {
-      const changes = { ...question };
-      if (index || index === 0) {
-        changes.answers[index] = event.target.value;
-      } else if (event.target.name) {
-        changes[event.target.name] = event.target.value; 
-      }
-    setQuestion(changes);
-  }
+    event: React.ChangeEvent<HTMLInputElement>;
+    index?: number;
+  }) => {
+    const changes = { ...poll };
+    if (index || index === 0) {
+      changes.answerOptions[index] = event.target.value;
+    } else if (event.target.name) {
+      changes[event.target.name] = event.target.value;
+    }
+    setPoll(changes);
+  };
 
-  const createPollMutation = useMutation((question: Question) =>
-    api.polls.createPoll(question),
+  const createPollMutation = useMutation((poll: IPoll) =>
+    api.polls.createPoll(poll),
   );
 
-  const handlePressStart = async (question: Question) => {
-    const res = await createPollMutation.mutateAsync(question);
+  const handlePressStart = async () => {
+    const res = await createPollMutation.mutateAsync(poll);
     router.push(
       {
         pathname: '',
         query: {
-          pollId: res.data.pollId,
+          pollId: res.data.id,
         },
       },
       '',
       { shallow: true },
     );
     setData(res.data);
+    setModalShow(true);
+  };
 
+  const handleModalClose = () => {
+    setModalShow(false);
+  };
+
+  const handleModalYes = () => {
+    router.replace({
+      pathname: '/poll',
+      query: {
+        pollId: data.id,
+      },
+    });
   };
 
   return (
@@ -85,55 +102,116 @@ export default function Index() {
         <meta name="description" content="Polls create app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav className={classNames(['navbar', 'navbar-light', 'bg-light', styles.customNavbar])}>
-        <img className="navbar-brand mb-0 pl-20" src="/page-logo.png"/>
+      <nav
+        className={classNames([
+          'navbar',
+          'navbar-light',
+          'bg-light',
+          styles.customNavbar,
+        ])}
+      >
+        <img className="navbar-brand mb-0 pl-20" src="/page-logo.png" />
         <span className="navbar-brand mb-0 h1">
           Poll website task: HTML example 2
         </span>
       </nav>
       <div className={classNames([styles.pageImageContainer])}>
-        <img className={classNames([styles.pageImage])} src="/header.jpg"/>
+        <img className={classNames([styles.pageImage])} src="/header.jpg" />
         <div className={classNames([styles.pageTask])}>
           <h1 className={classNames([styles.pageTaskTitle])}>
             Poll website task: HTML example 2
           </h1>
         </div>
       </div>
-      <div className={classNames([styles.pageContent, styles.pageContentPadding])}>
+      <div
+        className={classNames([styles.pageContent, styles.pageContentPadding])}
+      >
         <div className={classNames([styles.poll])}>
-            <div className={classNames([styles.pollTable])}>
-                <div className={classNames([styles.pollTableCell, styles.pollTableCellGray])}>
-                    <div className={classNames([styles.pollTableCellHead])}><p>Question:</p></div>
-                    <div className={classNames([styles.pollTableCellBody])}>
-                      <input type="text" value={question?.questionText} name="questionText" onChange={(event) => { handleChangeInput({event: event}) }} className={classNames([styles.inputText])} />
-                    </div>
+          <div className={classNames([styles.pollTable])}>
+            <div
+              className={classNames([
+                styles.pollTableCell,
+                styles.pollTableCellGray,
+              ])}
+            >
+              <div className={classNames([styles.pollTableCellHead])}>
+                <p>Question:</p>
+              </div>
+              <div className={classNames([styles.pollTableCellBody])}>
+                <input
+                  type="text"
+                  value={poll?.question}
+                  name="question"
+                  onChange={(event) => {
+                    handleChangeInput({ event: event });
+                  }}
+                  className={classNames([styles.inputText])}
+                />
+              </div>
             </div>
-            {
-              question?.answers && (question.answers.map((item, index) => {
+            {poll?.answerOptions &&
+              poll.answerOptions.map((item, index) => {
                 return (
-                  <div className={classNames([styles.pollTableCell])}  key={index}>
-                    <div className={classNames([styles.pollTableCellHead])}>Answer {index + 1}:</div>
+                  <div
+                    className={classNames([styles.pollTableCell])}
+                    key={index}
+                  >
+                    <div className={classNames([styles.pollTableCellHead])}>
+                      Answer {index + 1}:
+                    </div>
                     <div className={classNames([styles.pollTableCellBody])}>
-                      <input type="text" onChange={(event) => { handleChangeInput({event: event, index: index})}}  value={question?.answers[index]} className={classNames([styles.inputText])}/>
+                      <input
+                        type="text"
+                        onChange={(event) => {
+                          handleChangeInput({ event: event, index: index });
+                        }}
+                        value={poll?.answerOptions[index]}
+                        className={classNames([styles.inputText])}
+                      />
                     </div>
-                </div>
-                )
-              }))
-            }
-                <div>
-                    <div className={classNames([styles.pollTablePlus])} >
-                      <button className={classNames([styles.btn, styles.btnPlus])} onClick={ handlePressPlus }>
-                        +
-                      </button>
-                    </div>
-                </div>
+                  </div>
+                );
+              })}
+            <div>
+              <div className={classNames([styles.pollTablePlus])}>
+                <button
+                  className={classNames([styles.btn, styles.btnPlus])}
+                  onClick={handlePressPlus}
+                >
+                  +
+                </button>
+              </div>
             </div>
+          </div>
 
-            <button className={classNames([styles.btn, styles.btnStart ])} onClick={() => handlePressStart(question)}>
-                Start
-            </button>
+          <button
+            className={classNames([styles.btn, styles.btnStart])}
+            onClick={handlePressStart}
+            disabled={
+              poll.question && poll.answerOptions.length >= 2 ? false : true
+            }
+          >
+            Start
+          </button>
         </div>
       </div>
+      <Modal
+        show={modalShow}
+        onHide={handleModalClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>New poll created</Modal.Header>
+        <Modal.Body>Do you want to open?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalYes}>
+            Yes
+          </Button>
+          <Button variant="secondary" onClick={handleModalClose}>
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
@@ -147,15 +225,12 @@ export async function getServerSideProps({ query: { pollId } }) {
   const api = new Api<string>({
     baseUrl: apiUrl,
   });
-  await queryClient.prefetchQuery(
-    ['cachedPoll', pollId],
-    async () => {
-      const res = await api.polls.getPoll({
-        pollId,
-      });
-      return res.data;
-    },
-  );
+  await queryClient.prefetchQuery(['cachedPoll', pollId], async () => {
+    const res = await api.polls.getPoll({
+      pollId,
+    });
+    return res.data;
+  });
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

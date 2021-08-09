@@ -12,28 +12,47 @@ export class PollController {
     res: Response,
     next: NextFunction,
   ) => {
-    // get poll parameters (question, answer variants)
-    const {} = req.body as any;
-      try {
-        const persist = this.pollService.persist();
-        res.status(200).json(persist.id);
+    const poll = req.body as any;
+    try {
+      const persist = await this.pollService.persist(poll);
+      const pollWithId = {
+        question: persist.question,
+        answerOptions: persist.answerOptions,
+        answers: persist.answers,
+        id: persist.id,
+      };
+      res.status(200).json(pollWithId);
     } catch (error) {
       next(error);
     }
-    };
-    
-    public getPoll = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-        ) => {
-        // get poll parameters (question, answer variants)
-        const {} = req.body as any;
-            try {
-            const persist = this.pollService.persist();
-            res.status(200).json(persist.id);
-        } catch (error) {
-            next(error);
-        }
-        };
+  };
+
+  public getPoll = async (req: Request, res: Response, next: NextFunction) => {
+    const { pollId } = req.query as any;
+    try {
+      const poll = await this.pollService.findById(pollId);
+      res.status(200).json(poll);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updatePoll = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const { pollId, userName, selectedOption } = req.body as any;
+    try {
+      const updatedPoll = await this.pollService.findAndUpdate({
+        pollId,
+        userName,
+        selectedOption,
+      });
+
+      res.status(200).json(updatedPoll);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

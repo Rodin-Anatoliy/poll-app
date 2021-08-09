@@ -55,6 +55,17 @@ export interface HttpResponse<D extends unknown, E extends unknown = unknown>
   error: E;
 }
 
+export interface IAnswer {
+  userName: string;
+  selectedOption: number;
+}
+export interface IPoll {
+  question: string;
+  answerOptions: string[];
+  answers?: IAnswer[];
+}
+
+
 type CancelToken = Symbol | string | number;
 
 export enum ContentType {
@@ -256,7 +267,6 @@ export class Api<
   SecurityDataType extends unknown
 > extends HttpClient<SecurityDataType> {
 
-
   polls = {
     /**
      * No description
@@ -265,10 +275,17 @@ export class Api<
      * @request POST:/poll/create
      */
     createPoll: (
-      body?: {},
+      body?: {
+        question: string;
+        answerOptions: string[];
+        answers?: {
+          userName: string;
+          selectedOption: number;
+        }[];
+      },
       params: RequestParams = {},
     ) =>
-      this.request<'', any>({ // request type
+      this.request<any, any>({
         path: `/poll/create`,
         method: 'POST',
         body: body,
@@ -289,10 +306,26 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<'', any>({ // request type
+      this.request<any, any>({
         path: `/poll/get`,
         method: 'GET',
         query: query,
+        format: 'json',
+        ...params,
+      }),
+
+    updatePoll: (
+      body?: {
+        pollId: string;
+        userName: string;
+        selectedOption: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<any, any>({
+        path: `/poll/update`,
+        method: 'POST',
+        body: body,
         format: 'json',
         ...params,
       }),
