@@ -58,6 +58,7 @@ export interface HttpResponse<D extends unknown, E extends unknown = unknown>
 export interface IAnswer {
   userName: string;
   selectedOption: number;
+  userId: string;
 }
 export interface IPoll {
   question: string;
@@ -299,6 +300,7 @@ export class Api<
         pollId: string;
         userName: string;
         selectedOption: number;
+        userId: string;
       },
       params: RequestParams = {},
     ) =>

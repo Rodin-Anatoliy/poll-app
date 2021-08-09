@@ -15,14 +15,16 @@ export class PollService {
     pollId,
     userName,
     selectedOption,
+    userId,
   }: {
     pollId: string;
     userName: string;
     selectedOption: number;
+    userId: string;
   }) {
     const poll = await this.findById(pollId);
     return await this.pollModel.findByIdAndUpdate(pollId, {
-      answers: [...poll.answers, { userName, selectedOption }],
+      answers: [...poll.answers, { userName, selectedOption, userId }],
     });
   }
 }

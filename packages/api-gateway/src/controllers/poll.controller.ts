@@ -42,12 +42,13 @@ export class PollController {
     res: Response,
     next: NextFunction,
   ) => {
-    const { pollId, userName, selectedOption } = req.body as any;
+    const { pollId, userName, selectedOption, userId } = req.body as any;
     try {
       const updatedPoll = await this.pollService.findAndUpdate({
         pollId,
         userName,
         selectedOption,
+        userId,
       });
 
       res.status(200).json(updatedPoll);

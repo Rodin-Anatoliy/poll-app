@@ -28,4 +28,7 @@ export class AnswerReqDto {
 
   @IsNumber()
   selectedOption: number;
+
+  @IsString()
+  userId;
 }

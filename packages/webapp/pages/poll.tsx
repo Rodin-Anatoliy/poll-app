@@ -50,28 +50,37 @@ export default function poll() {
       pollId,
       userName,
       selectedOption,
+      userId,
     }: {
       pollId: string;
       userName: string;
       selectedOption: number;
+      userId: string;
     }) => {
-      return api.polls.updatePoll({ pollId, userName, selectedOption });
+      return api.polls.updatePoll({ pollId, userName, selectedOption, userId });
     },
   );
   const handleClickSubmit = async () => {
     const uuid = uuidv4();
-    localStorage.setItem('userId', uuid);
-    setUserId(uuid);
+    if (!localStorage.getItem('userId')) {
+      localStorage.setItem('userId', uuid);
+      setUserId(uuid);
+    }
+
     const res = await updatePollMutation.mutateAsync({
       pollId: pollId,
       userName: currentAnswer?.userName,
       selectedOption: currentAnswer?.selectedOption,
+      userId: userId,
     });
-    res.data.answers.push({
-      userName: currentAnswer?.userName,
-      selectedOption: currentAnswer?.selectedOption,
-    });
-    setAnswers(res.data.answers);
+    setAnswers([
+      ...res.data.answers,
+      {
+        userName: currentAnswer?.userName,
+        selectedOption: currentAnswer?.selectedOption,
+        userId: userId,
+      },
+    ]);
   };
   return (
     <>
@@ -148,16 +157,20 @@ export default function poll() {
                         currentAnswer?.userName &&
                         (currentAnswer?.selectedOption ||
                           currentAnswer?.selectedOption === 0) &&
-                        !userId
+                        !answers.find((elem) => elem.userId === userId)
                           ? false
                           : true
                       }
                       onClick={handleClickSubmit}
-                      value={userId ? 'You already voted' : 'Submit'}
+                      value={
+                        answers.find((elem) => elem.userId === userId)
+                          ? 'You already voted'
+                          : 'Submit'
+                      }
                     />
                   </div>
                 </div>
-                {userId && (
+                {answers.find((elem) => elem.userId === userId) && (
                   <>
                     <h1>Results</h1>
                     <table className="ex2-table">
