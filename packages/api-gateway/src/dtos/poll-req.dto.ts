@@ -1,4 +1,4 @@
-import { IsString, IsArray } from 'class-validator';
+import { IsString, IsArray, IsNumber } from 'class-validator';
 
 export class PollReqDto {
   @IsString()
@@ -20,7 +20,12 @@ export class GetPollReqDto {
 }
 
 export class AnswerReqDto {
+  @IsString()
   pollId: string;
+
+  @IsString()
   userName: string;
+
+  @IsNumber()
   selectedOption: number;
 }

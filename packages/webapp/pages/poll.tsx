@@ -67,7 +67,11 @@ export default function poll() {
       userName: currentAnswer?.userName,
       selectedOption: currentAnswer?.selectedOption,
     });
-    //setAnswers(res);
+    res.data.answers.push({
+      userName: currentAnswer?.userName,
+      selectedOption: currentAnswer?.selectedOption,
+    });
+    setAnswers(res.data.answers);
   };
   return (
     <>

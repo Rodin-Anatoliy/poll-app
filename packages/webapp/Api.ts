@@ -293,26 +293,6 @@ export class Api<
         type: ContentType.Json,
         ...params,
       }),
-    
-    /**
-     * No description
-     *
-     * @name getPoll
-     * @request GET:/poll/get
-     */
-    getPoll: (
-      query?: {
-        pollId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<any, any>({
-        path: `/poll/get`,
-        method: 'GET',
-        query: query,
-        format: 'json',
-        ...params,
-      }),
 
     updatePoll: (
       body?: {
@@ -327,7 +307,23 @@ export class Api<
         method: 'POST',
         body: body,
         format: 'json',
+        type: ContentType.Json,
         ...params,
       }),
+      
+    getPoll: (
+      query?: {
+        pollId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<any, any>({
+        path: `/poll/get`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params,
+      }),
+
   };
 }

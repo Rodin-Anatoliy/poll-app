@@ -29,9 +29,6 @@ class PollRout implements Route {
     );
     this.router.post(
       `${this.path}/update`,
-      (req, res, next) => {
-        console.log(req);
-      },
       validationMiddleware(AnswerReqDto, 'body'),
       this.pollController.updatePoll,
     );
