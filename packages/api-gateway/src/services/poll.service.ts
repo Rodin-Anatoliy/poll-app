@@ -24,7 +24,7 @@ export class PollService {
   }) {
     const poll = await this.findById(pollId);
     return await this.pollModel.findByIdAndUpdate(pollId, {
-      answers: [...poll.answers, { userName, selectedOption, userId }],
+      answers: [...poll?.answers, { userName, selectedOption, userId }],
     });
   }
 }
